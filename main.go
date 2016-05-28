@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/immesys/spawnpoint/spawnable"
 	bw2 "gopkg.in/immesys/bw2bind.v5"
-	yaml "gopkg.in/yaml.v2"
 )
 
 func main() {
@@ -24,21 +23,14 @@ func main() {
 	}
 
 	bwClient := bw2.ConnectOrExit("127.0.0.1:28589")
-	bwClient.SetEntityFileOrExit("entity.key")
-
-	paramContents, err := ioutil.ReadFile("params.yml")
-	if err != nil {
-		fmt.Println("Failed to read parameters file:", err)
-		os.Exit(1)
-	}
-	parameters := make(map[string]string)
-	err = yaml.Unmarshal(paramContents, &parameters)
+	bwClient.SetEntityFromEnvironOrExit()
+	parameters := spawnable.GetParamsOrExit()
 
 	for i := 0; i < repetitions; i++ {
-		msg := fmt.Sprintf("%v: %s", i, parameters["msg"])
+		msg := fmt.Sprintf("%v: %s", i, parameters.MustString("msg"))
 		po := bw2.CreateTextPayloadObject(bw2.PONumText, msg)
 		bwClient.PublishOrExit(&bw2.PublishParams{
-			URI:            parameters["to"],
+			URI:            parameters.MustString("to"),
 			AutoChain:      true,
 			PayloadObjects: []bw2.PayloadObject{po},
 		})
@@ -46,5 +38,5 @@ func main() {
 		time.Sleep(1 * time.Second)
 	}
 
-    fmt.Printf("Sent %v messages. Terminating.\n", repetitions)
+	fmt.Printf("Sent %v messages. Terminating.\n", repetitions)
 }
