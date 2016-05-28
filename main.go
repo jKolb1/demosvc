@@ -45,4 +45,6 @@ func main() {
 
 		time.Sleep(1 * time.Second)
 	}
+
+    fmt.Printf("Sent %v messages. Terminating.\n", repetitions)
 }
