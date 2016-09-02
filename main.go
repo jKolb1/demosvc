@@ -22,7 +22,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	bwClient := bw2.ConnectOrExit("127.0.0.1:28589")
+	bwClient := bw2.ConnectOrExit("")
 	bwClient.SetEntityFromEnvironOrExit()
 	parameters := spawnable.GetParamsOrExit()
 
