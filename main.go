@@ -45,6 +45,7 @@ func main() {
 			AutoChain:      true,
 			PayloadObjects: []bw2.PayloadObject{po},
 		})
+		fmt.Printf("Publishing %d\n", i)
 
 		time.Sleep(1 * time.Second)
 	}
